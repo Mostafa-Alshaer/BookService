@@ -18,7 +18,7 @@ namespace BookService.Controllers
         private BookServiceContext db = new BookServiceContext();
 
         // GET api/Books
-        public IQueryable<BookDTO> GetBooks()
+        public List<BookDTO> GetBooks()
         {
             var books = from b in db.Books
                         select new BookDTO()
@@ -28,7 +28,7 @@ namespace BookService.Controllers
                             AuthorName = b.Author.Name
                         };
 
-            return books;
+            return books.ToList();
         }
 
         // GET api/Books/5
