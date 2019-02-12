@@ -49,7 +49,7 @@ namespace BookService.Infrastructure.DBRepositories
             }
         }
 
-        public void Update(string id, DBBook dBBook)
+        public void Update(DBBook dBBook)
         {
             try
             {
