@@ -26,13 +26,13 @@ namespace BookService.Infrastructure.DBRepositories
             }
         }
 
-        public int Insert(DBAuthor dBAuthor)
+        public DBAuthor Insert(DBAuthor dBAuthor)
         {
             using (DBBookServiceContext db = new DBBookServiceContext())
             {
                 db.DBAuthors.Add(dBAuthor);
                 db.SaveChanges();
-                return dBAuthor.Id;
+                return dBAuthor;
             }
         }
 

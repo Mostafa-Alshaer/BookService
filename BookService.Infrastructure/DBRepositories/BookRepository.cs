@@ -26,13 +26,14 @@ namespace BookService.Infrastructure.DBRepositories
             }
         }
 
-        public int Insert(DBBook dBBook)
+        public DBBook Insert(DBBook dBBook)
         {
             using (DBBookServiceContext db = new DBBookServiceContext())
             {
                 db.DBBooks.Add(dBBook);
                 db.SaveChanges();
-                return dBBook.Id;
+                db.Entry(dBBook).Reference(x => x.Author).Load();
+                return dBBook;
             }
         }
 

@@ -18,7 +18,7 @@ namespace BookService.Core.Services
             this.ops = ops;
         }
 
-        public int Insert(Book book)
+        public Book Insert(Book book)
         {
             // Business rules before execute operation 
 

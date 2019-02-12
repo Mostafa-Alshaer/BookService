@@ -14,9 +14,9 @@ namespace BookService.Infrastructure.Operations
     public class BookOperations : IBookOperations
     {
         private BookRepository repository = new BookRepository();
-        public int Insert(Book book)
+        public Book Insert(Book book)
         {
-            return repository.Insert(Mapper.Map<DBBook>(book));
+            return Mapper.Map<Book>( repository.Insert(Mapper.Map<DBBook>(book)) );
         }
 
         public List<Book> SelectAll()

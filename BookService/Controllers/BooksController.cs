@@ -85,47 +85,34 @@ namespace BookService.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        //[ResponseType(typeof(BookDTO))]
-        //public async Task<IHttpActionResult> PostBook(BookViewModel book)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
+        [ResponseType(typeof(BookDTO))]
+        public IHttpActionResult PostBook(BookViewModel book)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-        //    //db.Books.Add(book);
-        //    await db.SaveChangesAsync();
+            BookDTO dto = Mapper.Map<BookDTO>(_bookService.Insert(Mapper.Map<Book>(book)));
 
-        //    // New code:
-        //    // Load author name
-        //    db.Entry(book).Reference(x => x.Author).Load();
+            return CreatedAtRoute("DefaultApi", new { id = dto.Id }, dto);
+        }
 
-        //    var dto = new BookDTO()
-        //    {
-        //        Id = book.Id,
-        //        Title = book.Title,
-        //        AuthorName = book.Author.Name
-        //    };
+        // DELETE: api/Books/5
+        [ResponseType(typeof(BookViewModel))]
+        public IHttpActionResult DeleteBook(int id)
+        {
+            BookViewModel book = Mapper.Map<BookViewModel>(_bookService.GetById(id));
+            if (book == null)
+            {
+                return NotFound();
+            }
 
-        //    return CreatedAtRoute("DefaultApi", new { id = book.Id }, dto);
-        //}
+            _bookService.Remove(Mapper.Map<Book>(book));
 
-        //// DELETE: api/Books/5
-        //[ResponseType(typeof(BookViewModel))]
-        //public async Task<IHttpActionResult> DeleteBook(int id)
-        //{
-        //    BookViewModel book = await db.Books.FindAsync(id);
-        //    if (book == null)
-        //    {
-        //        return NotFound();
-        //    }
+            return Ok(book);
+        }
 
-        //    //db.Books.Remove(book);
-        //    await db.SaveChangesAsync();
-
-        //    return Ok(book);
-        //}
-       
         private bool BookExists(int id)
         {
             return _bookService.Exists(id);

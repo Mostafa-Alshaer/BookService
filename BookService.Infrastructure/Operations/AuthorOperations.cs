@@ -14,9 +14,9 @@ namespace BookService.Infrastructure.Operations
     public class AuthorOperations : IAuthorOperations
     {
         private AuthorRepository repository = new AuthorRepository();
-        public int Insert(Author author)
+        public Author Insert(Author author)
         {
-            return repository.Insert(Mapper.Map<DBAuthor>(author));
+            return Mapper.Map<Author>(repository.Insert(Mapper.Map<DBAuthor>(author)));
         }
 
         public List<Author> SelectAll()

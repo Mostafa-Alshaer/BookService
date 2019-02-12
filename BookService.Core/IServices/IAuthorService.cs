@@ -9,7 +9,7 @@ namespace BookService.Core.IServices
 {
     public interface IAuthorService
     {
-        int Insert(Author author);
+        Author Insert(Author author);
         List<Author> SelectAll();
         Author GetById(int id);
         void Update(Author author);
