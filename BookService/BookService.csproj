@@ -282,6 +282,12 @@
       <DependentUpon>201902101525383_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BookService.Infrastructure\BookService.Infrastructure.csproj">
+      <Project>{31c29f44-d7d5-409c-9b03-52075890cae7}</Project>
+      <Name>BookService.Infrastructure</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

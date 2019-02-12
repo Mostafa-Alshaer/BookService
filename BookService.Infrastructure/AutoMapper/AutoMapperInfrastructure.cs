@@ -11,7 +11,7 @@ namespace BookService.Infrastructure.AutoMapper
 {
     public class AutoMapperInfrastructure : Profile
     {
-        AutoMapperInfrastructure()
+        public AutoMapperInfrastructure()
         {
             CreateMap<Book, DBBook>().ReverseMap();
             CreateMap<Author, DBAuthor>().ReverseMap();
