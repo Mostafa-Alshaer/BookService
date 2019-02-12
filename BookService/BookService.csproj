@@ -173,6 +173,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="AutoMapper\AutoMapperApplication.cs" />
     <Compile Include="Controllers\AuthorsController.cs" />
     <Compile Include="Controllers\BooksController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -283,6 +284,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BookService.Core\BookService.Core.csproj">
+      <Project>{95acfa31-2d92-4542-8737-476bfb2c50c0}</Project>
+      <Name>BookService.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BookService.Infrastructure\BookService.Infrastructure.csproj">
       <Project>{31c29f44-d7d5-409c-9b03-52075890cae7}</Project>
       <Name>BookService.Infrastructure</Name>
