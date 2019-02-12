@@ -12,8 +12,16 @@ namespace BookService.AutoMapper
     {
         public AutoMapperApplication()
         {
-            CreateMap<Core.Models.Book, BookDTO>().ReverseMap();
-            CreateMap<Core.Models.Book, BookDetailDTO>().ReverseMap();
+            CreateMap<Book, BookViewModel>().ReverseMap();
+            CreateMap<Author, AuthorViewModel>().ReverseMap();
+
+            CreateMap<Core.Models.Book, BookDTO>().ForMember(dest => dest.AuthorName,
+               opts => opts.MapFrom(src => src.Author.Name));
+            CreateMap<BookDTO, Core.Models.Book>();
+
+            CreateMap<Core.Models.Book, BookDetailDTO>().ForMember(dest => dest.AuthorName,
+               opts => opts.MapFrom(src => src.Author.Name));
+            CreateMap<BookDetailDTO, Core.Models.Book>();
         }
     }
 }

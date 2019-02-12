@@ -10,80 +10,55 @@ namespace BookService.Infrastructure.DBRepositories
 {
     class BookRepository
     {
-        private DBBookServiceContext db = new DBBookServiceContext();
         public List<DBBook> Get()
         {
-            try
+            using (DBBookServiceContext db = new DBBookServiceContext())
             {
-                return db.DBBooks.ToList();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
+                return db.DBBooks.Include(x => x.Author).ToList();
             }
         }
 
         public DBBook Get(int id)
         {
-            try
+            using (DBBookServiceContext db = new DBBookServiceContext())
             {
-                return db.DBBooks.SingleOrDefault(a => a.Id == id);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
+                return db.DBBooks.Include(x => x.Author).SingleOrDefault(a => a.Id == id);
             }
         }
 
         public int Insert(DBBook dBBook)
         {
-            try
+            using (DBBookServiceContext db = new DBBookServiceContext())
             {
                 db.DBBooks.Add(dBBook);
                 db.SaveChanges();
                 return dBBook.Id;
             }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
         }
 
         public void Update(DBBook dBBook)
         {
-            try
+            using (DBBookServiceContext db = new DBBookServiceContext())
             {
                 db.Entry(dBBook).State = EntityState.Modified;
                 db.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
             }
         }
 
         public void Remove(DBBook dBBook)
         {
-            try
+            using (DBBookServiceContext db = new DBBookServiceContext())
             {
                 db.DBBooks.Remove(dBBook);
                 db.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
             }
         }
 
         public bool Exists(int id)
         {
-            try
+            using (DBBookServiceContext db = new DBBookServiceContext())
             {
                 return db.DBBooks.Count(a => a.Id == id) > 0;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
             }
         }
     }

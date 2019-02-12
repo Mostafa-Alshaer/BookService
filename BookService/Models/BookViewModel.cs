@@ -2,7 +2,7 @@
 
 namespace BookService.Models
 {
-    public class Book
+    public class BookViewModel
     {
         public int Id { get; set; }
         [Required]
@@ -14,6 +14,6 @@ namespace BookService.Models
         // Foreign Key
         public int AuthorId { get; set; }
         // Navigation property
-        public Author Author { get; set; }
+        public AuthorViewModel Author { get; set; }
     }
 }

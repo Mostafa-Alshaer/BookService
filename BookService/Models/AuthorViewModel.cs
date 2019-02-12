@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BookService.Models
 {
-    public class Author
+    public class AuthorViewModel
     {
         public int Id { get; set; }
         [Required]

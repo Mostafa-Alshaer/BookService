@@ -6,56 +6,55 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
+using BookService.Core.IServices;
+using BookService.Core.IServices;
+using BookService.Core.Services;
 using BookService.Models;
+using Ninject;
+using AutoMapper;
+using BookService.Core.Models;
 
 namespace BookService.Controllers
 {
-    public class BooksController : ApiController
+    public class BooksController : BaseApiController
     {
-        private BookServiceContext db = new BookServiceContext();
+        private IBookService _bookService;
+
+        public BooksController()
+        {
+            var kernel = new StandardKernel();
+            kernel.Load(Assembly.GetExecutingAssembly());
+
+            _bookService = kernel.Get<IBookService>();
+        }
 
         // GET api/Books
         public List<BookDTO> GetBooks()
         {
-            var books = from b in db.Books
-                        select new BookDTO()
-                        {
-                            Id = b.Id,
-                            Title = b.Title,
-                            AuthorName = b.Author.Name
-                        };
-
-            return books.ToList();
+            return Mapper.Map<List<BookDTO>>(_bookService.SelectAll());
         }
 
         // GET api/Books/5
         [ResponseType(typeof(BookDetailDTO))]
-        public async Task<IHttpActionResult> GetBook(int id)
+        public IHttpActionResult GetBook(int id)
         {
-            var book = await db.Books.Include(b => b.Author).Select(b =>
-                new BookDetailDTO()
-                {
-                    Id = b.Id,
-                    Title = b.Title,
-                    Year = b.Year,
-                    Price = b.Price,
-                    AuthorName = b.Author.Name,
-                    Genre = b.Genre
-                }).SingleOrDefaultAsync(b => b.Id == id);
+            var book = Mapper.Map<BookDetailDTO>(_bookService.GetById(id));
+
             if (book == null)
             {
                 return NotFound();
-            }
-
+            }    
+            
             return Ok(book);
         }
 
         // PUT: api/Books/5
         [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutBook(int id, Book book)
+        public IHttpActionResult PutBook(int id, BookViewModel book)
         {
             if (!ModelState.IsValid)
             {
@@ -67,11 +66,9 @@ namespace BookService.Controllers
                 return BadRequest();
             }
 
-            db.Entry(book).State = EntityState.Modified;
-
             try
             {
-                await db.SaveChangesAsync();
+                _bookService.Update(Mapper.Map<Book>(book));
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -88,59 +85,50 @@ namespace BookService.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        [ResponseType(typeof(BookDTO))]
-        public async Task<IHttpActionResult> PostBook(Book book)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+        //[ResponseType(typeof(BookDTO))]
+        //public async Task<IHttpActionResult> PostBook(BookViewModel book)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
 
-            db.Books.Add(book);
-            await db.SaveChangesAsync();
+        //    //db.Books.Add(book);
+        //    await db.SaveChangesAsync();
 
-            // New code:
-            // Load author name
-            db.Entry(book).Reference(x => x.Author).Load();
+        //    // New code:
+        //    // Load author name
+        //    db.Entry(book).Reference(x => x.Author).Load();
 
-            var dto = new BookDTO()
-            {
-                Id = book.Id,
-                Title = book.Title,
-                AuthorName = book.Author.Name
-            };
+        //    var dto = new BookDTO()
+        //    {
+        //        Id = book.Id,
+        //        Title = book.Title,
+        //        AuthorName = book.Author.Name
+        //    };
 
-            return CreatedAtRoute("DefaultApi", new { id = book.Id }, dto);
-        }
+        //    return CreatedAtRoute("DefaultApi", new { id = book.Id }, dto);
+        //}
 
-        // DELETE: api/Books/5
-        [ResponseType(typeof(Book))]
-        public async Task<IHttpActionResult> DeleteBook(int id)
-        {
-            Book book = await db.Books.FindAsync(id);
-            if (book == null)
-            {
-                return NotFound();
-            }
+        //// DELETE: api/Books/5
+        //[ResponseType(typeof(BookViewModel))]
+        //public async Task<IHttpActionResult> DeleteBook(int id)
+        //{
+        //    BookViewModel book = await db.Books.FindAsync(id);
+        //    if (book == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            db.Books.Remove(book);
-            await db.SaveChangesAsync();
+        //    //db.Books.Remove(book);
+        //    await db.SaveChangesAsync();
 
-            return Ok(book);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
+        //    return Ok(book);
+        //}
+       
         private bool BookExists(int id)
         {
-            return db.Books.Count(e => e.Id == id) > 0;
+            return _bookService.Exists(id);
         }
     }
 }
